@@ -9,20 +9,47 @@ var stage = new Konva.Stage({
 
 var layer = new Konva.Layer();
 
-var circle = new Konva.Circle({
+var circleA = new Konva.Circle({
   x: stage.getWidth() / 2,
   y: stage.getHeight() / 2,
-  radius: 70,
+  radius: 200,
   fill: 'yellow',
   stroke: 'green',
   strokeWidth: 4
 });
-
 // add the shape to the layer
-layer.add(circle);
+layer.add(circleA);
 
-// add the layer to the stage
-stage.add(layer);
+var circleB = new Konva.Circle({
+  x: stage.getWidth() / 2,
+  y: stage.getHeight() / 2,
+  radius: 50,
+  fill: 'red',
+  stroke: 'purple',
+  strokeWidth: 4,
+  offset: {
+    x: 0,
+    y: 100
+}
+});
+// add the shape to the layer
+layer.add(circleB);
+
+var circleC = new Konva.Circle({
+  x: stage.getWidth() / 2,
+  y: stage.getHeight() / 2,
+  radius: 50,
+  fill: 'blue',
+  stroke: 'white',
+  strokeWidth: 4,
+  offset: {
+    x: 0,
+    y: -100
+}
+});
+// add the shape to the layer
+layer.add(circleC);
+
 
 var hexagon = new Konva.RegularPolygon({
     x: stage.getWidth() / 2,
@@ -31,16 +58,16 @@ var hexagon = new Konva.RegularPolygon({
     radius: 20,
     fill: 'blue',
     stroke: 'black',
-    strokeWidth: 4
+    strokeWidth: 4,
+    offset: {
+        x: -200,
+        y:0
+    }
 });
-layer.add(redRect);
-
-    // one revolution per 4 seconds
-    var angularSpeed = 90;
 
 var redRect = new Konva.Rect({
-    x: 400,
-    y: 75,
+    x: stage.getWidth() / 2,
+    y: stage.getHeight() / 2,
     width: 100,
     height: 50,
     fill: 'red',
@@ -52,6 +79,12 @@ var redRect = new Konva.Rect({
     }
 });
 
+// one revolution per 4 seconds
+var angularSpeed = 90;
+
+// add the layer to the stage
+
+layer.add(redRect);
 layer.add(hexagon);
 stage.add(layer);
 
@@ -63,11 +96,23 @@ var centerY = stage.getWidth() / 2;
 
 var anim = new Konva.Animation(function(frame) {
 
-    hexagon.setX(amplitude * Math.sin(frame.time * 2 * Math.PI / period) + centerX);
+    var scale = Math.sin(frame.time * 2 * Math.PI / 5000) + 1;
+    //var scale = frame.time/50000 +1;
+  
 
-    // hexagon.setY(amplitude * Math.sin(frame.time * 2 * Math.PI / period) + centerY);
+    var angleDiff = frame.timeDiff * angularSpeed / 1000;
 
+    hexagon.setX(amplitude * Math.cos(frame.time * 2 * Math.PI / period) + centerX);
+
+     hexagon.setY(amplitude * Math.sin(frame.time * 2 * Math.PI / period) + centerY);
     redRect.rotate(angleDiff);
+
+    //hexagon.rotate(angleDiff);
+    circleC.rotate(angleDiff);
+    circleC.scale({ radius: scale});
+    hexagon.scale( {radius: scale});
+
+    // redRect.rotate(angleDiff);
 
 }, layer);
 
